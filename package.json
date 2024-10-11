@@ -117,7 +117,12 @@
     "@vercel/functions": "^1.4.0",
     "city-timezones": "^1.2.1",
     "eslint": "^8.34.0",
-    "turbo": "^1.10.1"
+    "turbo": "^1.10.1",
+     "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "mkdirp": "^1.0.0",
+    "csstype": "^3.0.0",
+    "openapi-types": "^10.0.0"
   },
   "resolutions": {
     "types-ramda": "0.29.4",
