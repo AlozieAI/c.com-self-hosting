@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install only production dependencies
-RUN yarn install --production
+RUN yarn workspaces focus --production
 
 # Build the project for production
 RUN yarn build
