@@ -1,14 +1,21 @@
-# Step 1: Use an official Node.js base image with the appropriate version
+# Use an official Node.js image
 FROM node:18-slim
 
-# Step 2: Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Step 3: Copy all the project files into the working directory
+# Copy all files
 COPY . .
 
-# Step 4: Expose the port that Cal.com will run on (default is 3000, adjust if necessary)
+# Install only production dependencies
+RUN yarn install --production
+
+# Build the project for production
+RUN yarn build
+
+# Expose the port (default is 3000, but change it if you use a different port)
 EXPOSE 3000
 
-# Step 5: Run only 'yarn dx' or the production version of it
-CMD ["yarn", "dx"]
+# Start the production server
+CMD ["yarn", "start"]
+
