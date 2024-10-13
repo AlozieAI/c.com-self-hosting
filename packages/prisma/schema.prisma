@@ -3,8 +3,8 @@
 
 datasource db {
   provider  = "postgresql"
-  url       = ${{ shared.DATABASE_URL}}
-  directUrl = ${{ shared.DATABASE_URL}}
+  url       = "postgresql://alozie:pBT4066jNnsojX9BBmXhT6wc9MXLZdeU@dpg-cs0c3nrtq21c73ea70p0-a.ohio-postgres.render.com:5432/caldatabase"
+  directUrl = "postgresql://alozie:pBT4066jNnsojX9BBmXhT6wc9MXLZdeU@dpg-cs0c3nrtq21c73ea70p0-a.ohio-postgres.render.com:5432/caldatabase"
 }
 
 generator client {
