@@ -8,16 +8,20 @@ WORKDIR /app
 COPY . .
 
 # Step 4: Install production dependencies for workspaces and log the output
-RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-build.log && yarn add ts-node --production
+RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-build.log
 
-# Step 5: Build the project (production build)
+# Step 5: Ensure ts-node is available for production
+RUN yarn add ts-node --dev
+
+# Step 6: Build the project (production build)
 RUN yarn build
 
-# Step 6: Expose the port the app will run on (default is 3000)
+# Step 7: Expose the port the app will run on (default is 3000)
 EXPOSE 3000
 
-# Step 7: Start the application using the appropriate production script
+# Step 8: Start the application using the appropriate production script
 CMD ["yarn", "start"]
+
 
 
 
