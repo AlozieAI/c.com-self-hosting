@@ -1,22 +1,28 @@
-# Use an official Node.js image
-FROM node:18-slim
+# Step 1: Use an official Node.js image as the base
+FROM node:18-alpine
 
-# Set working directory
+# Step 2: Set the working directory inside the container
 WORKDIR /app
 
-# Copy all files
+# Step 3: Copy the necessary project files to the container
 COPY . .
 
-# Install only production dependencies
+# Step 4: Install dependencies with yarn
+RUN yarn install --frozen-lockfile
+
+# Step 5: Add ts-node as a dev dependency in case it is needed in production builds
+RUN yarn add ts-node --dev
+
+# Step 6: Install production dependencies and build the project
 RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-build.log
 
-
-# Build the project for production
+# Step 7: Build the project (production build)
 RUN yarn build
 
-# Expose the port (default is 3000, but change it if you use a different port)
+# Step 8: Expose the port the app will run on (default is 3000)
 EXPOSE 3000
 
-# Start the production server
+# Step 9: Start the application using the appropriate production script
 CMD ["yarn", "start"]
+
 
