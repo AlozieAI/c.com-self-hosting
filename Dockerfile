@@ -8,7 +8,8 @@ WORKDIR /app
 COPY . .
 
 # Install only production dependencies
-RUN yarn workspaces focus --production
+RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-build.log
+
 
 # Build the project for production
 RUN yarn build
