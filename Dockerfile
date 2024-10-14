@@ -13,13 +13,16 @@ RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-build.log
 # Step 5: Ensure ts-node is available for production
 RUN yarn add ts-node --dev
 
-# Step 6: Build the project (production build)
+# Step 6: Build the project with increased memory limit
+RUN NODE_OPTIONS=--max_old_space_size=4096 yarn build
+
+# Step 7: Build the project (production build)
 RUN yarn build
 
-# Step 7: Expose the port the app will run on (default is 3000)
+# Step 8: Expose the port the app will run on (default is 3000)
 EXPOSE 3000
 
-# Step 8: Start the application using the appropriate production script
+# Step 9: Start the application using the appropriate production script
 CMD ["yarn", "start"]
 
 
