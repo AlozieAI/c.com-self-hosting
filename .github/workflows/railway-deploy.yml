@@ -14,7 +14,8 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Install dependencies
-        run:  yarn install --force
+        run: yarn install --mode=update-lockfile
+
         
       - name: Build with increased memory limit
         run: NODE_OPTIONS=--max_old_space_size=4096 yarn build
