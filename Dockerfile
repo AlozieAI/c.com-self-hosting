@@ -19,11 +19,11 @@ ENV NODE_ENV=production
 # Step 6: Clean Yarn cache and node_modules
 RUN yarn cache clean && rm -rf node_modules
 
-# Step 7: Install production dependencies for workspaces and log the output
-RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-install.log
+# Step 7: Install production dependencies for the current workspace
+RUN yarn install --production 2>&1 | tee /tmp/yarn-install.log  > /dev/null 2>&1
 
 # Step 8: Ensure ts-node is available for production
-RUN yarn add ts-node --dev
+RUN yarn add ts-node --dev  > /dev/null 2>&1
 
 # Step 9: Update Prisma packages to the latest version
 RUN yarn add @prisma/client@latest prisma@latest
@@ -31,10 +31,8 @@ RUN yarn add @prisma/client@latest prisma@latest
 # Step 10: Generate Prisma client
 RUN yarn prisma generate
 
-
 # **Step 11:** Run database migrations before the build
 RUN yarn prisma migrate deploy
-
 
 # Step 12: Build the project with increased memory limit, limit output to last 100 lines
 RUN node --max_old_space_size=8192 ./node_modules/.bin/yarn build 2>&1 | tee /tmp/yarn-build-full.log && tail -n 100 /tmp/yarn-build-full.log
@@ -44,6 +42,7 @@ EXPOSE 3000
 
 # Step 14: Start the application using the appropriate production script
 CMD ["yarn", "start"]
+
 
 
 
