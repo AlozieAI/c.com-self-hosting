@@ -1,27 +1,44 @@
-# Step 1: Use an official Node.js image as the base
-FROM node:18-alpine
+# Step 1: Use a specific Node.js version (Debian-based to avoid Alpine issues)
+FROM node:18-slim
 
-# Step 2: Set the working directory inside the container
+# Step 2: Install necessary system dependencies for Prisma and native modules
+RUN apt-get update && apt-get install -y \
+    openssl \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Step 3: Set the working directory inside the container
 WORKDIR /app
 
-# Step 3: Copy the necessary project files to the container
+# Step 4: Copy the necessary project files to the container
 COPY . .
 
-# Step 4: Install production dependencies for workspaces and log the output
-RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-build.log
+# Step 5: Set environment variables
+ENV NODE_ENV=production
 
-# Step 5: Ensure ts-node is available for production
+# Step 6: Clean Yarn cache and node_modules
+RUN yarn cache clean && rm -rf node_modules
+
+# Step 7: Install production dependencies for workspaces and log the output
+RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-install.log
+
+# Step 8: Ensure ts-node is available for production
 RUN yarn add ts-node --dev
 
-# Step 6: Build the project with increased memory limit
-RUN node --max_old_space_size=8192 --stack-size=8192 ./node_modules/.bin/yarn build 2>&1 | tee /tmp/yarn-build-full.log && tail -n 100 /tmp/yarn-build-full.log
+# Step 9: Update Prisma packages to the latest version
+RUN yarn add @prisma/client@latest prisma@latest
 
-# Step 7: Expose the port the app will run on (default is 3000)
+# Step 10: Generate Prisma client
+RUN yarn prisma generate
+
+# Step 11: Build the project with increased memory limit, limit output to last 100 lines
+RUN node --max_old_space_size=8192 ./node_modules/.bin/yarn build 2>&1 | tee /tmp/yarn-build-full.log && tail -n 100 /tmp/yarn-build-full.log
+
+# Step 12: Expose the port the app will run on (default is 3000)
 EXPOSE 3000
 
-# Step 8: Start the application using the appropriate production script
+# Step 13: Start the application using the appropriate production script
 CMD ["yarn", "start"]
-
 
 
 
