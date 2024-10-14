@@ -13,13 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         
-      - name: Install dependencies
-        run: yarn install --mode=update-lockfile
 
-        
-      - name: Build with increased memory limit
-        run: NODE_OPTIONS=--max_old_space_size=4096 yarn build
-        
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
