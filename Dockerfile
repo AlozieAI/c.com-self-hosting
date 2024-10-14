@@ -31,13 +31,18 @@ RUN yarn add @prisma/client@latest prisma@latest
 # Step 10: Generate Prisma client
 RUN yarn prisma generate
 
-# Step 11: Build the project with increased memory limit, limit output to last 100 lines
+
+# **Step 11:** Run database migrations before the build
+RUN yarn prisma migrate deploy
+
+
+# Step 12: Build the project with increased memory limit, limit output to last 100 lines
 RUN node --max_old_space_size=8192 ./node_modules/.bin/yarn build 2>&1 | tee /tmp/yarn-build-full.log && tail -n 100 /tmp/yarn-build-full.log
 
-# Step 12: Expose the port the app will run on (default is 3000)
+# Step 13: Expose the port the app will run on (default is 3000)
 EXPOSE 3000
 
-# Step 13: Start the application using the appropriate production script
+# Step 14: Start the application using the appropriate production script
 CMD ["yarn", "start"]
 
 
