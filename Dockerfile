@@ -14,7 +14,7 @@ RUN yarn workspaces focus --production 2>&1 | tee /tmp/yarn-build.log
 RUN yarn add ts-node --dev
 
 # Step 6: Build the project with increased memory limit
-RUN NODE_OPTIONS=--max_old_space_size=8192 yarn build 2>&1 | tee /tmp/yarn-build-full.log && tail -n 100 /tmp/yarn-build-full.log
+RUN NODE_OPTIONS=--max_old_space_size=8192 --stack-size=8192" yarn build 2>&1 | tee /tmp/yarn-build-full.log && tail -n 100 /tmp/yarn-build-full.log
 
 # Step 7: Expose the port the app will run on (default is 3000)
 EXPOSE 3000
